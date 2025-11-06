@@ -1,6 +1,7 @@
 'use client'
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet'
 import { useEffect } from 'react'
+import 'leaflet/dist/leaflet.css'
 
 function MapUpdater({ center, zoom }) {
   const map = useMap()
