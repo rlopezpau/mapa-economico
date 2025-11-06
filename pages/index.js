@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 
 const MapView = dynamic(() => import('../components/MapView'), { ssr: false })
 const LayerToggle = dynamic(() => import('../components/LayerToggle'), { ssr: false })
-const Legend = dynamic(() => import('../components/Legend'), { ssr: false })
 const YearSelector = dynamic(() => import('../components/YearSelector'), { ssr: false })
 const SearchBox = dynamic(() => import('../components/SearchBox'), { ssr: false })
 const Layout = dynamic(() => import('../components/Layout'), { ssr: false })
@@ -55,30 +54,54 @@ function HomePage() {
   return (
     <Layout>
       <div className="h-screen flex flex-col">
+        {/* Barra superior */}
         <div className="bg-white shadow-md p-4 flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-800">Mapa Económico</h1>
+          
           <div className="flex items-center space-x-4">
             <SearchBox onLocationSelect={setMapCenter} />
             <YearSelector year={year} onYearChange={setYear} />
-            <a href="/fuentes" className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              Exportar PNG
+            </button>
+            <a
+              href="/fuentes"
+              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+            >
               Fuentes
             </a>
           </div>
         </div>
 
+        {/* Contenido principal */}
         <div className="flex flex-1 overflow-hidden">
+          {/* Panel lateral */}
           <div className="w-64 bg-gray-100 p-4 space-y-4 overflow-y-auto">
-            <LayerToggle layers={layers} activeLayers={activeLayers} onToggle={handleLayerToggle} />
+            <LayerToggle
+              layers={layers}
+              activeLayers={activeLayers}
+              onToggle={handleLayerToggle}
+            />
+            
             {selectedFeature && (
               <div className="bg-white p-4 rounded-lg shadow-lg">
                 <h4 className="font-bold mb-2">Información</h4>
                 <p><strong>Nombre:</strong> {selectedFeature.nombre}</p>
                 <p><strong>Valor:</strong> {selectedFeature.valor}</p>
                 <p><strong>Año:</strong> {selectedFeature.año}</p>
+                <a 
+                  href={selectedFeature.fuente} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  Ver fuente
+                </a>
               </div>
             )}
           </div>
 
+          {/* Mapa */}
           <div className="flex-1">
             {isLoading ? (
               <div className="flex items-center justify-center h-full">
