@@ -3,6 +3,15 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet'
 import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
 
+// Fix para los iconos de Leaflet
+import L from 'leaflet'
+delete L.Icon.Default.prototype._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+})
+
 function MapUpdater({ center, zoom }) {
   const map = useMap()
   
@@ -62,7 +71,7 @@ export default function MapView({
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" style={{ height: '100%', minHeight: '500px' }}>
       <MapContainer
         center={center || [40.4168, -3.7038]}
         zoom={zoom || 6}
@@ -73,7 +82,7 @@ export default function MapView({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
         
-        {activeLayers.pib && geoData.pib && (
+        {activeLayers.pib && geoData?.pib && (
           <GeoJSON
             data={geoData.pib}
             style={style}
